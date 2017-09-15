@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commons-metric</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>metrics</name>
@@ -12,7 +12,7 @@
     <description>Metrics</description>
 
     <parent>
-        <groupId>org.services.micro.commons</groupId>
+        <groupId>com.services.micro.commons</groupId>
         <artifactId>helper</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
