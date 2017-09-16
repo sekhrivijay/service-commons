@@ -22,6 +22,8 @@
         <module>commons-swagger</module>
         <module>commons-https</module>
         <module>commons-mongo</module>
+        <module>commons-vip</module>
+        <module>commons-jsonp</module>
     </modules>
     
     <parent>

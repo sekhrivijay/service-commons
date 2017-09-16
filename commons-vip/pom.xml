@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>commons-mongo</artifactId>
+    <artifactId>commons-vip</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>mongo</name>
+    <name>vip</name>
 
-    <description>MongoDB integration</description>
+    <description>VIP F5 Management</description>
 
     <parent>
         <groupId>com.services.micro.commons</groupId>
@@ -23,8 +23,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 
