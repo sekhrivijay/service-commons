@@ -1,4 +1,4 @@
-package com.services.micro.commons.servlet.listener;
+package com.services.micro.commons.metric.servlet.listener;
 
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.servlets.HealthCheckServlet;

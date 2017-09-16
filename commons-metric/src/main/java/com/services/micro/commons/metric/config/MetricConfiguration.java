@@ -1,4 +1,4 @@
-package com.services.micro.commons.config;
+package com.services.micro.commons.metric.config;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlets.AdminServlet;
