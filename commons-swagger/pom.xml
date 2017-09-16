@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>commons-memcache</artifactId>
+    <artifactId>commons-swagger</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>memcache</name>
+    <name>swagger</name>
 
-    <description>Memcached integration</description>
+    <description>Swagger integration</description>
 
     <parent>
         <groupId>com.services.micro.commons</groupId>
@@ -19,22 +19,23 @@
     </parent>
 
     <properties>
-        <memcache.version>3.6.1</memcache.version>
+        <swagger.version>2.7.0</swagger.version>
     </properties>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.google.code.simple-spring-memcached</groupId>
-            <artifactId>spring-cache</artifactId>
-            <version>${memcache.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.simple-spring-memcached</groupId>
-            <artifactId>spymemcached-provider</artifactId>
-            <version>${memcache.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
+
 
     </dependencies>
 

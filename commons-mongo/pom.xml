@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>commons-memcache</artifactId>
+    <artifactId>commons-mongo</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>memcache</name>
+    <name>https</name>
 
-    <description>Memcached integration</description>
+    <description>MongoDB integration</description>
 
     <parent>
         <groupId>com.services.micro.commons</groupId>
@@ -19,23 +19,13 @@
     </parent>
 
     <properties>
-        <memcache.version>3.6.1</memcache.version>
     </properties>
 
     <dependencies>
-
         <dependency>
-            <groupId>com.google.code.simple-spring-memcached</groupId>
-            <artifactId>spring-cache</artifactId>
-            <version>${memcache.version}</version>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.google.code.simple-spring-memcached</groupId>
-            <artifactId>spymemcached-provider</artifactId>
-            <version>${memcache.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>

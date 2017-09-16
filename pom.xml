@@ -19,6 +19,9 @@
     <modules>
         <module>commons-metric</module>
         <module>commons-memcache</module>
+        <module>commons-swagger</module>
+        <module>commons-https</module>
+        <module>commons-mongo</module>
     </modules>
     
     <parent>

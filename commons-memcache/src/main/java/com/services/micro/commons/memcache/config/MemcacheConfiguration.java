@@ -6,6 +6,8 @@ import com.google.code.ssm.providers.CacheConfiguration;
 import com.google.code.ssm.providers.spymemcached.MemcacheClientFactoryImpl;
 import com.google.code.ssm.spring.SSMCache;
 import com.google.code.ssm.spring.SSMCacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -24,6 +26,8 @@ import java.util.Set;
 @ConditionalOnProperty(name = "service.memcache.enabled")
 @EnableConfigurationProperties(MemcacheConfigurationProperties.class)
 public class MemcacheConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemcacheConfiguration.class);
 
     @Autowired
     private MemcacheConfigurationProperties memcacheConfigurationProperties;
@@ -48,6 +52,7 @@ public class MemcacheConfiguration {
 
     @Bean
     public DefaultAddressProvider defaultAddressProvider() {
+        LOGGER.info("creating DefaultAddressProvider for memcache with endpoint " + memcacheConfigurationProperties.getServers());
         DefaultAddressProvider defaultAddressProvider = new DefaultAddressProvider();
         defaultAddressProvider.setAddress(memcacheConfigurationProperties.getServers());
         return defaultAddressProvider;
@@ -56,6 +61,7 @@ public class MemcacheConfiguration {
 
     @Bean
     public CacheConfiguration cacheConfiguration() {
+        LOGGER.info("creating CacheConfiguration for memcache");
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         cacheConfiguration.setConsistentHashing(true);
         cacheConfiguration.setUseBinaryProtocol(memcacheConfigurationProperties.isBinary());
@@ -71,6 +77,7 @@ public class MemcacheConfiguration {
     @DependsOn({"cacheBase", "memcacheClientFactoryImpl", "defaultAddressProvider", "cacheConfiguration"})
     @Bean
     public CacheFactory cacheFactory() {
+        LOGGER.info("creating CacheFactory for memcache");
         CacheFactory cacheFactory = new CacheFactory();
         cacheFactory.setCacheName(memcacheConfigurationProperties.getName());
         cacheFactory.setCacheClientFactory(memcacheClientFactoryImpl);
@@ -82,6 +89,7 @@ public class MemcacheConfiguration {
     @Bean
     @DependsOn("cacheFactory")
     public SSMCache ssmCache() {
+        LOGGER.info("creating SSMCache for memcache with ttl " + memcacheConfigurationProperties.getTtl());
         return  new SSMCache(cacheFactory.getCache(), memcacheConfigurationProperties.getTtl(), false);
     }
 

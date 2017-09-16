@@ -52,7 +52,7 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
 
     @Bean
     @DependsOn("collectorRegistry")
-    @ConditionalOnProperty(name = "service.metrics.prometheous.enabled")
+    @ConditionalOnProperty(name = "service.metrics.prometheus.enabled")
     public ServletRegistrationBean prometheusServletRegistrationBean() {
         LOGGER.info("creating prometheus metrics endpoint");
         collectorRegistry.register(new DropwizardExports(metricRegistry));
