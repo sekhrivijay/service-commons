@@ -24,6 +24,7 @@
         <module>commons-mongo</module>
         <module>commons-vip</module>
         <module>commons-jsonp</module>
+        <module>commons-git</module>
     </modules>
     
     <parent>
