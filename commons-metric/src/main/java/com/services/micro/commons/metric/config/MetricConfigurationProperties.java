@@ -13,16 +13,6 @@ public class MetricConfigurationProperties {
     private Dropwizard dropwizard;
     private Prometheus prometheus;
 
-    private boolean enabled = true;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public Dropwizard getDropwizard() {
         return dropwizard;
     }
