@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.services.micro.commons.git.config.GitConfiguration,\
+com.services.micro.commons.git.resource.GitResource

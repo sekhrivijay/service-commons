@@ -14,7 +14,7 @@ public class GitConfiguration {
     public static final String GIT_PROPERTIES = "git.properties";
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+    public static PropertySourcesPlaceholderConfigurer gitPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer c = new PropertySourcesPlaceholderConfigurer();
         c.setLocation(new ClassPathResource(GIT_PROPERTIES));
         c.setIgnoreResourceNotFound(true);

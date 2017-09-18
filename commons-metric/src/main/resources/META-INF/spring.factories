@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.services.micro.commons.metric.servlet.listener.HealthCheckListener,\
+com.services.micro.commons.metric.servlet.listener.MetricListener,\
+com.services.micro.commons.metric.config.MetricConfiguration

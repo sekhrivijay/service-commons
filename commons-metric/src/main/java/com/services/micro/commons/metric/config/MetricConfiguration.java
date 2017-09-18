@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +19,21 @@ import org.springframework.context.annotation.DependsOn;
 
 @Configuration
 @EnableMetrics
+@EnableConfigurationProperties(MetricConfigurationProperties.class)
 public class MetricConfiguration extends MetricsConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricConfiguration.class);
 
+    @Autowired
+    private MetricConfigurationProperties metricConfigurationProperties;
+
+    public MetricConfigurationProperties getMetricConfigurationProperties() {
+        return metricConfigurationProperties;
+    }
+
+    public void setMetricConfigurationProperties(MetricConfigurationProperties metricConfigurationProperties) {
+        this.metricConfigurationProperties = metricConfigurationProperties;
+    }
 
     @Override
     public void configureReporters(MetricRegistry metricRegistry) {
@@ -47,12 +59,13 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
     @ConditionalOnProperty(name = "service.metrics.dropwizard.enabled")
     public ServletRegistrationBean adminServletRegistrationBean() {
         LOGGER.info("creating dropwizard metrics endpoint");
+
         return new ServletRegistrationBean(new AdminServlet(), "/dropMetrics/*");
     }
 
     @Bean
     @DependsOn("collectorRegistry")
-    @ConditionalOnProperty(name = "service.metrics.prometheus.enabled")
+    @ConditionalOnProperty(name = "service.metrics.prometheus.enabled", havingValue = "true")
     public ServletRegistrationBean prometheusServletRegistrationBean() {
         LOGGER.info("creating prometheus metrics endpoint");
         collectorRegistry.register(new DropwizardExports(metricRegistry));
