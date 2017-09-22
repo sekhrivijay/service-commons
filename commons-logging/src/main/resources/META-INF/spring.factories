@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.services.micro.commons.logging.aspect.LogAspect,\
+com.services.micro.commons.logging.util.WebUtils

@@ -25,6 +25,7 @@
         <module>commons-vip</module>
         <module>commons-jsonp</module>
         <module>commons-git</module>
+        <module>commons-logging</module>
     </modules>
     
     <parent>
