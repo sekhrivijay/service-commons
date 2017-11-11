@@ -13,4 +13,4 @@ pipelines:
     - step:
         name: mvn deploy
         script:
-          - mvn deploy
+          - mvn -B deploy
