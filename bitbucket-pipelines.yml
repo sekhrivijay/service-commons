@@ -1,0 +1,16 @@
+image: maven:3.3.9
+
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        name: mvn  build
+        script:
+          - mvn -version
+          - mvn -B clean install
+    - step:
+        name: mvn deploy
+        script:
+          - mvn deploy
