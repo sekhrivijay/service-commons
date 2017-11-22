@@ -12,6 +12,7 @@ import javax.inject.Named;
 public class MetricConfigurationProperties {
     private Dropwizard dropwizard;
     private Prometheus prometheus;
+    private Prometheus Jmx;
 
     public Dropwizard getDropwizard() {
         return dropwizard;
@@ -29,6 +30,14 @@ public class MetricConfigurationProperties {
         this.prometheus = prometheus;
     }
 
+    public Prometheus getJmx() {
+        return Jmx;
+    }
+
+    public void setJmx(Prometheus jmx) {
+        Jmx = jmx;
+    }
+
     public static class Dropwizard {
         private boolean enabled = true;
 
@@ -42,6 +51,18 @@ public class MetricConfigurationProperties {
     }
 
     public static class Prometheus {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public static class Jmx {
         private boolean enabled = true;
 
         public boolean isEnabled() {

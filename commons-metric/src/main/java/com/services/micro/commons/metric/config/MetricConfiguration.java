@@ -1,5 +1,7 @@
 package com.services.micro.commons.metric.config;
 
+import com.codahale.metrics.ConsoleReporter;
+import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlets.AdminServlet;
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
@@ -17,37 +19,51 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.annotation.PostConstruct;
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 @EnableMetrics
 @EnableConfigurationProperties(MetricConfigurationProperties.class)
 public class MetricConfiguration extends MetricsConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricConfiguration.class);
+    private CollectorRegistry collectorRegistry;
+    private MetricRegistry metricRegistry;
 
-    @Autowired
+
+
     private MetricConfigurationProperties metricConfigurationProperties;
 
     public MetricConfigurationProperties getMetricConfigurationProperties() {
         return metricConfigurationProperties;
     }
 
+    @Autowired
     public void setMetricConfigurationProperties(MetricConfigurationProperties metricConfigurationProperties) {
         this.metricConfigurationProperties = metricConfigurationProperties;
     }
 
     @Override
     public void configureReporters(MetricRegistry metricRegistry) {
+//        LOGGER.info("Starting JMX reporter ");
+//        registerReporter(JmxReporter.forRegistry(metricRegistry).build()).start();
 //        registerReporter(ConsoleReporter
 //                .forRegistry(metricRegistry)
 //                .build())
 //                .start(100, TimeUnit.SECONDS);
     }
 
-    @Autowired
-    private CollectorRegistry collectorRegistry;
 
     @Autowired
-    private MetricRegistry metricRegistry;
+    public void setCollectorRegistry(CollectorRegistry collectorRegistry) {
+        this.collectorRegistry = collectorRegistry;
+    }
+
+    @Autowired
+    public void setMetricRegistry(MetricRegistry metricRegistry) {
+        this.metricRegistry = metricRegistry;
+    }
 
     @Bean
     public CollectorRegistry collectorRegistry() {
@@ -59,9 +75,17 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
     @ConditionalOnProperty(name = "service.metrics.dropwizard.enabled")
     public ServletRegistrationBean adminServletRegistrationBean() {
         LOGGER.info("creating dropwizard metrics endpoint");
-
         return new ServletRegistrationBean(new AdminServlet(), "/dropMetrics/*");
     }
+
+    @PostConstruct
+    public void startJmx() {
+        if(metricConfigurationProperties.getJmx().isEnabled()) {
+            LOGGER.info("Starting JMX reporter ....");
+            registerReporter(JmxReporter.forRegistry(metricRegistry).build()).start();
+        }
+    }
+
 
     @Bean
     @DependsOn("collectorRegistry")
