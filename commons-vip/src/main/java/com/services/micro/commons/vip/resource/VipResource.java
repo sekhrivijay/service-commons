@@ -3,6 +3,8 @@ package com.services.micro.commons.vip.resource;
 import com.services.micro.commons.vip.api.VipResponse;
 import com.services.micro.commons.vip.config.VipConstants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,13 +42,21 @@ public class VipResource {
     }
 
     @RequestMapping("/vipGlobalStatus")
-    public String getGlobalStatus() {
-        return vipResponse.getGlobal();
+    public ResponseEntity<String> getGlobalStatus() {
+        return getStringResponseEntity(vipResponse.getGlobal());
     }
 
     @RequestMapping("/vipLocalStatus")
-    public String getLocalStatus() {
-        return vipResponse.getLocal();
+    public ResponseEntity<String> getLocalStatus() {
+        return getStringResponseEntity(vipResponse.getLocal());
+
+    }
+
+    private ResponseEntity<String> getStringResponseEntity(String status) {
+        if(status.equals(VipConstants.DOWN)) {
+            return new ResponseEntity<>(status, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
 
