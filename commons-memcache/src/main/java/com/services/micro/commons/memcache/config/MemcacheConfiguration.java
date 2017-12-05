@@ -33,6 +33,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.ImportResource;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Configuration
@@ -45,10 +46,14 @@ public class MemcacheConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemcacheConfiguration.class);
 
-    @Autowired
+
     private MemcacheConfigurationProperties memcacheConfigurationProperties;
 
-//    @Autowired
+    @Autowired
+    public void setMemcacheConfigurationProperties(MemcacheConfigurationProperties memcacheConfigurationProperties) {
+        this.memcacheConfigurationProperties = memcacheConfigurationProperties;
+    }
+    //    @Autowired
 //    private MemcacheClientFactoryImpl memcacheClientFactoryImpl;
 
 //    @Autowired
@@ -57,11 +62,20 @@ public class MemcacheConfiguration {
 //    @Autowired
 //    private CacheConfiguration cacheConfiguration;
 
-    @Autowired
-    private SSMCache ssmCache;
+//    private SSMCache ssmCache;
+
+
+    private CacheBase cacheBase;
+
+//    @Autowired
+//    public void setSsmCache(SSMCache ssmCache) {
+//        this.ssmCache = ssmCache;
+//    }
 
     @Autowired
-    private CacheBase cacheBase;
+    public void setCacheBase(CacheBase cacheBase) {
+        this.cacheBase = cacheBase;
+    }
 
     @Bean
     public CacheBase cacheBase() {
@@ -206,37 +220,67 @@ public class MemcacheConfiguration {
 //    @Autowired
 //    private CacheFactory cacheFactory;
 
+//
+//    @Bean
+////    @DependsOn({"cacheBase", "memcacheClientFactoryImpl", "defaultAddressProvider", "cacheConfiguration"})
+////    @DependsOn({"cacheBase"})
+//    @ConditionalOnMissingBean
+//    public SSMCache ssmCache() throws Exception {
+//        LOGGER.info("creating CacheFactory for memcache");
+//        DefaultAddressProvider defaultAddressProvider = new DefaultAddressProvider();
+//        defaultAddressProvider.setAddress(memcacheConfigurationProperties.getServers());
+//        CacheConfiguration cacheConfiguration = new CacheConfiguration();
+//        cacheConfiguration.setConsistentHashing(true);
+//        cacheConfiguration.setUseBinaryProtocol(memcacheConfigurationProperties.isBinary());
+//
+//        CacheFactory cacheFactory = new CacheFactory();
+//        cacheFactory.setCacheName(memcacheConfigurationProperties.getName());
+////        cacheFactory.setCacheClientFactory(memcacheClientFactoryImpl);
+//        cacheFactory.setCacheClientFactory(new MemcacheClientFactoryImpl());
+//        cacheFactory.setAddressProvider(defaultAddressProvider);
+//        cacheFactory.setConfiguration(cacheConfiguration);
+//
+//        LOGGER.info("creating SSMCache for memcache with ttl " + memcacheConfigurationProperties.getTtl());
+//        return new SSMCache(cacheFactory.getObject(), memcacheConfigurationProperties.getTtl(), false);
+//    }
 
-    @Bean
-//    @DependsOn({"cacheBase", "memcacheClientFactoryImpl", "defaultAddressProvider", "cacheConfiguration"})
-//    @DependsOn({"cacheBase"})
-    @ConditionalOnMissingBean
-    public SSMCache ssmCache() throws Exception {
+    public SSMCache buildSsmCache(MemcacheConfigurationProperties.Config config)  {
         LOGGER.info("creating CacheFactory for memcache");
         DefaultAddressProvider defaultAddressProvider = new DefaultAddressProvider();
         defaultAddressProvider.setAddress(memcacheConfigurationProperties.getServers());
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         cacheConfiguration.setConsistentHashing(true);
-        cacheConfiguration.setUseBinaryProtocol(memcacheConfigurationProperties.isBinary());
+        cacheConfiguration.setUseBinaryProtocol(config.isBinary());
 
         CacheFactory cacheFactory = new CacheFactory();
-        cacheFactory.setCacheName(memcacheConfigurationProperties.getName());
-//        cacheFactory.setCacheClientFactory(memcacheClientFactoryImpl);
+        cacheFactory.setCacheName(config.getName());
         cacheFactory.setCacheClientFactory(new MemcacheClientFactoryImpl());
         cacheFactory.setAddressProvider(defaultAddressProvider);
         cacheFactory.setConfiguration(cacheConfiguration);
-
-        LOGGER.info("creating SSMCache for memcache with ttl " + memcacheConfigurationProperties.getTtl());
-        return new SSMCache(cacheFactory.getObject(), memcacheConfigurationProperties.getTtl(), false);
+        SSMCache ssmCache = null;
+        LOGGER.info("creating SSMCache " + config.getName() + " for memcache with ttl " + config.getTtl());
+        try {
+            ssmCache = new SSMCache(cacheFactory.getObject(), config.getTtl(), false);
+        } catch (Exception e) {
+            LOGGER.error("Could not initialize cache ", e);
+        }
+        return ssmCache;
     }
 
     @Bean
 //    @DependsOn("ssmCache")
     @ConditionalOnMissingBean
-    public SSMCacheManager ssmCacheManager() {
+    public SSMCacheManager ssmCacheManager() throws Exception {
         SSMCacheManager ssmCacheManager = new SSMCacheManager();
         Set<SSMCache> ssmCacheSet = new HashSet<>();
-        ssmCacheSet.add(ssmCache);
+//        ssmCacheSet.add(ssmCache);
+        List<MemcacheConfigurationProperties.Config> configs = memcacheConfigurationProperties.getConfigs();
+        if(configs != null && configs.size() > 0) {
+            configs.forEach(e -> ssmCacheSet.add(buildSsmCache(e)));
+        }
+
+//        ssmCacheSet.add(ssmCache());
+//        ssmCacheSet.add(ssmCache1());
         ssmCacheManager.setCaches(ssmCacheSet);
         return ssmCacheManager;
     }

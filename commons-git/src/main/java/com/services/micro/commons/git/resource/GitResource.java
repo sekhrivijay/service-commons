@@ -3,7 +3,7 @@ package com.services.micro.commons.git.resource;
 import com.services.micro.commons.git.config.GitConfiguration;
 import com.services.micro.commons.git.util.PropertiesLoader;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Properties;
@@ -18,12 +18,12 @@ public class GitResource {
         try {
             properties = new Properties();
             PropertiesLoader.load(properties, GitConfiguration.GIT_PROPERTIES);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @RequestMapping("/buildStatus")
+    @GetMapping("/buildStatus")
     public Properties getGitInfo() {
         return properties;
     }

@@ -5,7 +5,7 @@ import com.services.micro.commons.vip.config.VipConstants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class VipResource {
     private static VipResponse vipResponse = new VipResponse();
 
-    @RequestMapping("/vipStatus")
+    @GetMapping("/vipStatus")
     public VipResponse getStatus(Optional<Integer> local, Optional<Integer> global) {
         if (local.isPresent() && global.isPresent()) {
             if (local.get() == 0 && global.get() == 1) {
@@ -41,19 +41,19 @@ public class VipResource {
         return status != null && status.equals(VipConstants.DOWN) ? 0 : 1;
     }
 
-    @RequestMapping("/vipGlobalStatus")
+    @GetMapping("/vipGlobalStatus")
     public ResponseEntity<String> getGlobalStatus() {
         return getStringResponseEntity(vipResponse.getGlobal());
     }
 
-    @RequestMapping("/vipLocalStatus")
+    @GetMapping("/vipLocalStatus")
     public ResponseEntity<String> getLocalStatus() {
         return getStringResponseEntity(vipResponse.getLocal());
 
     }
 
     private ResponseEntity<String> getStringResponseEntity(String status) {
-        if(status.equals(VipConstants.DOWN)) {
+        if (status.equals(VipConstants.DOWN)) {
             return new ResponseEntity<>(status, HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity<>(status, HttpStatus.OK);
