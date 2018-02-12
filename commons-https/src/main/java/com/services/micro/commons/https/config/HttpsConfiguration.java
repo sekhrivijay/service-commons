@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(name = "service.https.enabled")
 public class HttpsConfiguration {
 
-    @Value("${server.http.port}")
+    @Value("${server.http.port:80}")
     private int httpPort;
 
     @Bean

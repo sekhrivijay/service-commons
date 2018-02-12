@@ -46,6 +46,14 @@
             <id>myMavenRepo</id>
             <url>${myMavenRepoWriteUrl}</url>
         </snapshotRepository>
+        <!--<repository>-->
+            <!--<id>nexus-releases</id>-->
+            <!--<url>http://35.185.85.217:8081/nexus/content/repositories/releases</url>-->
+        <!--</repository>-->
+        <!--<snapshotRepository>-->
+            <!--<id>nexus-snapshots</id>-->
+            <!--<url>http://35.185.85.217:8081/nexus/content/repositories/snapshots</url>-->
+        <!--</snapshotRepository>-->
     </distributionManagement>
     <modules>
         <module>commons-metric</module>
@@ -62,7 +70,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.6.RELEASE</version>
+        <version>1.5.9.RELEASE</version>
         <relativePath/>
     </parent>
 
