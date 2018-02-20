@@ -163,7 +163,7 @@ public class MemcacheConfiguration {
     public SSMCache buildSsmCache(MemcacheConfigurationProperties.Config config)  {
         LOGGER.info("creating CacheFactory for memcache");
         DefaultAddressProvider defaultAddressProvider = new DefaultAddressProvider();
-        defaultAddressProvider.setAddress(memcacheConfigurationProperties.getServers());
+        defaultAddressProvider.setAddress(config.getServers());
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         cacheConfiguration.setConsistentHashing(true);
         cacheConfiguration.setUseBinaryProtocol(config.isBinary());

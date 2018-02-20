@@ -15,7 +15,9 @@ public class MemcacheConfigurationProperties {
     private boolean enabled;
     private List<Config> configs;
 
+
     public static class Config {
+        private String servers = "localhost:11211";
         private int ttl = 3600;
         private String name = "default";
         private boolean binary = true;
@@ -44,6 +46,14 @@ public class MemcacheConfigurationProperties {
             this.binary = binary;
         }
 
+        public String getServers() {
+            return servers;
+        }
+
+        public void setServers(String servers) {
+            this.servers = servers;
+        }
+
         @Override
         public String toString() {
             return "Config{" +
@@ -62,49 +72,57 @@ public class MemcacheConfigurationProperties {
         this.configs = configs;
     }
 
-    private String servers = "localhost:11211";
-    private int ttl = 3600;
-    private String name = "default";
-    private boolean binary = true;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getServers() {
-        return servers;
-    }
-
-    public void setServers(String servers) {
-        this.servers = servers;
-    }
-
-    public int getTtl() {
-        return ttl;
-    }
-
-    public void setTtl(int ttl) {
-        this.ttl = ttl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isBinary() {
-        return binary;
-    }
-
-    public void setBinary(boolean binary) {
-        this.binary = binary;
-    }
+//    private final static String DEFAULT_SERVERS =  "localhost:11211";
+//    private final static int DEFAULT_TTL = 3600;
+//    private String servers ;
+//    private int ttl = 3600;
+//    private String name = "default";
+//    private boolean binary = true;
+//
+//    public boolean isEnabled() {
+//        return enabled;
+//    }
+//
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
+//
+//    public String getServers() {
+////        if(servers == null) {
+////            return DEFAULT_SERVERS;
+////        }
+//        return servers;
+//    }
+//
+//    public void setServers(String servers) {
+//        this.servers = servers;
+//    }
+//
+//    public int getTtl() {
+////        if (ttl == 0) {
+////            return DEFAULT_TTL;
+////        }
+//        return ttl;
+//    }
+//
+//    public void setTtl(int ttl) {
+//        this.ttl = ttl;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public boolean isBinary() {
+//        return binary;
+//    }
+//
+//    public void setBinary(boolean binary) {
+//        this.binary = binary;
+//    }
 
 }
