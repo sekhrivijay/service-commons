@@ -29,8 +29,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.ImportResource;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +40,7 @@ import java.util.Set;
 @ConditionalOnProperty(name = "service.memcache.enabled")
 @EnableConfigurationProperties(MemcacheConfigurationProperties.class)
 public class MemcacheConfiguration {
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemcacheConfiguration.class);
 
@@ -159,8 +158,7 @@ public class MemcacheConfiguration {
     }
 
 
-
-    public SSMCache buildSsmCache(MemcacheConfigurationProperties.Config config)  {
+    public SSMCache buildSsmCache(MemcacheConfigurationProperties.Config config) {
         LOGGER.info("creating CacheFactory for memcache");
         DefaultAddressProvider defaultAddressProvider = new DefaultAddressProvider();
         defaultAddressProvider.setAddress(config.getServers());
@@ -189,7 +187,7 @@ public class MemcacheConfiguration {
         SSMCacheManager ssmCacheManager = new SSMCacheManager();
         Set<SSMCache> ssmCacheSet = new HashSet<>();
         List<MemcacheConfigurationProperties.Config> configs = memcacheConfigurationProperties.getConfigs();
-        if(configs != null && configs.size() > 0) {
+        if (configs != null && configs.size() > 0) {
             configs.forEach(e -> ssmCacheSet.add(buildSsmCache(e)));
         }
         ssmCacheManager.setCaches(ssmCacheSet);

@@ -41,24 +41,42 @@ public class MetricConfigurationProperties {
     public static class Dropwizard {
         private boolean enabled = true;
 
+        private String endpoint = "/dropMetrics";
+
         public boolean isEnabled() {
             return enabled;
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
         }
     }
 
     public static class Prometheus {
         private boolean enabled = true;
-
+        private String endpoint = "/promMetrics";
         public boolean isEnabled() {
             return enabled;
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
         }
     }
 

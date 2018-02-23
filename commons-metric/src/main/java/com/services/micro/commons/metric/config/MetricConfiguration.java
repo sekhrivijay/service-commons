@@ -11,6 +11,7 @@ import io.prometheus.client.exporter.MetricsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -24,6 +25,14 @@ import javax.annotation.PostConstruct;
 @EnableMetrics
 @EnableConfigurationProperties(MetricConfigurationProperties.class)
 public class MetricConfiguration extends MetricsConfigurerAdapter {
+
+//    @Value("${service.metrics.prometheus.endpoint:/promMetrics}")
+//    private String promMetricsEndPoint;
+//
+//    @Value("${service.metrics.prometheus.endpoint:/promMetrics}")
+//    private String promMetricsEndPoint;
+//
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricConfiguration.class);
     private CollectorRegistry collectorRegistry;
@@ -72,7 +81,8 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
     @ConditionalOnProperty(name = "service.metrics.dropwizard.enabled")
     public ServletRegistrationBean adminServletRegistrationBean() {
         LOGGER.info("creating dropwizard metrics endpoint");
-        return new ServletRegistrationBean(new AdminServlet(), "/dropMetrics/*");
+//        return new ServletRegistrationBean(new AdminServlet(), "/dropMetrics/*");
+        return new ServletRegistrationBean(new AdminServlet(), metricConfigurationProperties.getPrometheus().getEndpoint() + "/*");
     }
 
     @PostConstruct
@@ -92,6 +102,6 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
         LOGGER.info("creating prometheus metrics endpoint");
         collectorRegistry.register(new DropwizardExports(metricRegistry));
         MetricsServlet metricsServlet = new MetricsServlet(collectorRegistry);
-        return new ServletRegistrationBean(metricsServlet, "/promMetrics");
+        return new ServletRegistrationBean(metricsServlet, metricConfigurationProperties.getPrometheus().getEndpoint());
     }
 }
