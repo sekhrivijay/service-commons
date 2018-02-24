@@ -5,6 +5,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlets.AdminServlet;
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
 import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
+import com.services.micro.commons.metric.servlet.filter.PerformanceFilter;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
 import io.prometheus.client.exporter.MetricsServlet;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,18 +28,16 @@ import javax.annotation.PostConstruct;
 @EnableConfigurationProperties(MetricConfigurationProperties.class)
 public class MetricConfiguration extends MetricsConfigurerAdapter {
 
-//    @Value("${service.metrics.prometheus.endpoint:/promMetrics}")
-//    private String promMetricsEndPoint;
-//
-//    @Value("${service.metrics.prometheus.endpoint:/promMetrics}")
-//    private String promMetricsEndPoint;
-//
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricConfiguration.class);
     private CollectorRegistry collectorRegistry;
     private MetricRegistry metricRegistry;
 
+    @Value("${spring.application.name:default}")
+    public String applicationName;
+
+    @Value("${spring.profiles.active:local}")
+    public String environment;
 
     private MetricConfigurationProperties metricConfigurationProperties;
 
@@ -52,12 +52,7 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
 
     @Override
     public void configureReporters(MetricRegistry metricRegistry) {
-//        LOGGER.info("Starting JMX reporter ");
-//        registerReporter(JmxReporter.forRegistry(metricRegistry).build()).start();
-//        registerReporter(ConsoleReporter
-//                .forRegistry(metricRegistry)
-//                .build())
-//                .start(100, TimeUnit.SECONDS);
+
     }
 
 
@@ -82,7 +77,7 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
     public ServletRegistrationBean adminServletRegistrationBean() {
         LOGGER.info("creating dropwizard metrics endpoint");
 //        return new ServletRegistrationBean(new AdminServlet(), "/dropMetrics/*");
-        return new ServletRegistrationBean(new AdminServlet(), metricConfigurationProperties.getPrometheus().getEndpoint() + "/*");
+        return new ServletRegistrationBean(new AdminServlet(), metricConfigurationProperties.getDropwizard().getEndpoint() + "/*");
     }
 
     @PostConstruct
@@ -103,5 +98,18 @@ public class MetricConfiguration extends MetricsConfigurerAdapter {
         collectorRegistry.register(new DropwizardExports(metricRegistry));
         MetricsServlet metricsServlet = new MetricsServlet(collectorRegistry);
         return new ServletRegistrationBean(metricsServlet, metricConfigurationProperties.getPrometheus().getEndpoint());
+    }
+
+
+
+    @Bean
+    @ConditionalOnProperty(name = "service.metrics.performance.enabled")
+    public FilterRegistrationBean registration() {
+        LOGGER.info("Performance filter started ....");
+        FilterRegistrationBean registration = new FilterRegistrationBean(
+                new PerformanceFilter(metricRegistry, environment, applicationName));
+        registration.setEnabled(true);
+//        registration.setUrlPatterns(Arrays.asList("/*"));
+        return registration;
     }
 }

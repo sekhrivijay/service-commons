@@ -2,17 +2,14 @@ package com.services.micro.commons.metric.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-
-import javax.inject.Named;
 
 @ConfigurationProperties(prefix = "service.metrics")
 @EnableConfigurationProperties
 public class MetricConfigurationProperties {
     private Dropwizard dropwizard;
     private Prometheus prometheus;
-    private Prometheus Jmx;
+    private Jmx jmx;
+    private Performance performance;
 
     public Dropwizard getDropwizard() {
         return dropwizard;
@@ -30,12 +27,34 @@ public class MetricConfigurationProperties {
         this.prometheus = prometheus;
     }
 
-    public Prometheus getJmx() {
-        return Jmx;
+    public Jmx getJmx() {
+        return jmx;
     }
 
-    public void setJmx(Prometheus jmx) {
-        Jmx = jmx;
+    public void setJmx(Jmx jmx) {
+        this.jmx = jmx;
+    }
+
+
+
+    public Performance getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(Performance performance) {
+        this.performance = performance;
+    }
+
+    public static class Performance {
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
     }
 
     public static class Dropwizard {
@@ -63,6 +82,7 @@ public class MetricConfigurationProperties {
     public static class Prometheus {
         private boolean enabled = true;
         private String endpoint = "/promMetrics";
+
         public boolean isEnabled() {
             return enabled;
         }
